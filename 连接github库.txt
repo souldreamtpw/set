@@ -1,0 +1,11 @@
+git bash here
+git init
+git clone git@github.com:souldreamtpw/???.git
+
+
+消除差异
+git pull
+git pull origin master --allow-unrelated-histories
+
+加库
+git remote add origin git@gitee.com:soul_dream/project.git

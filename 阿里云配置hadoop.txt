@@ -1,0 +1,91 @@
+1.连接阿里云
+Windows：Powershell。
+MAC：Terminal。
+
+ssh -V
+（没有就下载openssh）
+
+ssh root@公网ip
+
+
+
+2. 安装JDK
+wget https://download.java.net/openjdk/jdk8u41/ri/openjdk-8u41-b04-linux-x64-14_jan_2020.tar.gz
+tar -zxvf openjdk-8u41-b04-linux-x64-14_jan_2020.tar.gz
+mv java-se-8u41-ri/ /usr/java8
+echo 'export JAVA_HOME=/usr/java8' >> /etc/profile
+echo 'export PATH=$PATH:$JAVA_HOME/bin' >> /etc/profile
+source /etc/profile
+java -version
+
+3. 安装Hadoop
+wget https://mirrors.tuna.tsinghua.edu.cn/apache/hadoop/common/hadoop-2.9.2/hadoop-2.9.2.tar.gz（网址无效，自行下载hadoop安装包）
+tar -zxvf hadoop-2.9.2.tar.gz -C /opt/
+mv /opt/hadoop-2.9.2 /opt/hadoop
+echo 'export HADOOP_HOME=/opt/hadoop/' >> /etc/profile
+echo 'export PATH=$PATH:$HADOOP_HOME/bin' >> /etc/profile
+echo 'export PATH=$PATH:$HADOOP_HOME/sbin' >> /etc/profile
+source /etc/profile    
+echo "export JAVA_HOME=/usr/java8" >> /opt/hadoop/etc/hadoop/yarn-env.sh
+echo "export JAVA_HOME=/usr/java8" >> /opt/hadoop/etc/hadoop/hadoop-env.sh
+hadoop version
+
+4.配置Hadoop
+vim /opt/hadoop/etc/hadoop/core-site.xml
+
+在<configuration></configuration>节点内插入如下内容。
+<property>
+        <name>hadoop.tmp.dir</name>
+        <value>file:/opt/hadoop/tmp</value>
+        <description>location to store temporary files</description>
+    </property>
+    <property>
+        <name>fs.defaultFS</name>
+        <value>hdfs://localhost:9000</value>
+<configuration>
+    <property>
+        <name>fs.defaultFS</name>
+        <value>hdfs://0.0.0.0:9000</value>
+    </property>
+</configuration>
+    </property>
+
+
+
+
+
+vim /opt/hadoop/etc/hadoop/hdfs-site.xml
+
+在<configuration></configuration>节点内插入如下内容。
+ <property>
+        <name>dfs.replication</name>
+        <value>1</value>
+    </property>
+    <property>
+        <name>dfs.namenode.name.dir</name>
+        <value>file:/opt/hadoop/tmp/dfs/name</value>
+    </property>
+    <property>
+        <name>dfs.datanode.data.dir</name>
+        <value>file:/opt/hadoop/tmp/dfs/data</value>
+<configuration>
+<property>
+        <name>dfs.namenode.http-address</name>
+        <value>0.0.0.0:50070</value>
+</property>
+</configuration>
+    </property>
+
+
+5. 配置SSH免密登录
+ssh-keygen -t rsa
+cd .ssh
+cat id_rsa.pub >> authorized_keys
+
+6. 启动Hadoop
+hadoop namenode -format
+start-dfs.sh
+start-yarn.sh
+
+配置安全组
+http://<ECS公网IP>:8088 和 http://<ECS公网IP>:50070
