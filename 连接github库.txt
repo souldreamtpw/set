@@ -5,7 +5,7 @@ git init
 git remote add origin git@gitee.com:soul_dream/project.git
 
 
-上传文件夹
+
 git pull
 消除差异
 git pull origin master --allow-unrelated-histories
