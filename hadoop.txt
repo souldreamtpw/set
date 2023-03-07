@@ -1,0 +1,8 @@
+start-all.sh
+stop-all.sh
+cd /opt/spark-1.6.1
+./sbin/start-all.sh
+
+
+http://47.108.201.244:8088
+http://47.108.201.244:50070

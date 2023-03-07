@@ -1,0 +1,5 @@
+git bash here
+ssh -T git@github.com
+git init
+git remote add origin git@gitee.com:soul_dream/project.git
+
